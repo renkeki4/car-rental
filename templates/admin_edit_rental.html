@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Редактирование дат аренды #{{ rental.id }}</h2>
+<p><strong>Автомобиль:</strong> {{ rental.car.brand }} {{ rental.car.model }}</p>
+<p><strong>Пользователь:</strong> {{ rental.user.username }} ({{ rental.user.email }})</p>
+<p><strong>Текущие даты:</strong> {{ rental.start_date.strftime('%d.%m.%Y') }} – {{ rental.end_date.strftime('%d.%m.%Y') }}</p>
+<p><strong>Текущая стоимость:</strong> {{ rental.total_cost }} руб.</p>
+<form method="POST" action="{{ url_for('admin_edit_rental', rental_id=rental.id) }}">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="start_date" class="form-label">Новая дата начала</label>
+            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ rental.start_date.strftime('%Y-%m-%d') }}" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="end_date" class="form-label">Новая дата окончания</label>
+            <input type="date" class="form-control" id="end_date" name="end_date" value="{{ rental.end_date.strftime('%Y-%m-%d') }}" required>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+    <a href="{{ url_for('admin_rentals') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Управление арендами (администратор)</h2>
+<a href="{{ url_for('index') }}" class="btn btn-secondary mb-3">На главную</a>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Автомобиль</th>
+            <th>Пользователь</th>
+            <th>Дата начала</th>
+            <th>Дата окончания</th>
+            <th>Стоимость</th>
+            <th>Статус</th>
+            <th>Изменить статус</th>
+            <th>Редактировать даты</th>
+            <th>Удалить</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rental in rentals %}
+        <tr>
+            <td>{{ rental.id }}</td>
+            <td>{{ rental.car.brand }} {{ rental.car.model }}</td>
+            <td>{{ rental.user.username }} ({{ rental.user.email }})</td>
+            <td>{{ rental.start_date.strftime('%d.%m.%Y') }}</td>
+            <td>{{ rental.end_date.strftime('%d.%m.%Y') }}</td>
+            <td>{{ rental.total_cost }} руб.</td>
+            <td>
+                {% if rental.status == 'booked' %}
+                    <span class="badge bg-warning text-dark">Забронировано</span>
+                {% elif rental.status == 'active' %}
+                    <span class="badge bg-primary">Активно</span>
+                {% elif rental.status == 'completed' %}
+                    <span class="badge bg-success">Завершено</span>
+                {% elif rental.status == 'cancelled' %}
+                    <span class="badge bg-secondary">Отменено</span>
+                {% endif %}
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('admin_update_rental', rental_id=rental.id) }}">
+                    <select name="status" class="form-select form-select-sm">
+                        <option value="booked" {% if rental.status == 'booked' %}selected{% endif %}>Забронировано</option>
+                        <option value="active" {% if rental.status == 'active' %}selected{% endif %}>Активно</option>
+                        <option value="completed" {% if rental.status == 'completed' %}selected{% endif %}>Завершено</option>
+                        <option value="cancelled" {% if rental.status == 'cancelled' %}selected{% endif %}>Отменено</option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-primary mt-1">Обновить</button>
+                </form>
+            </td>
+            <td>
+                <a href="{{ url_for('admin_edit_rental', rental_id=rental.id) }}" class="btn btn-sm btn-warning">Изменить даты</a>
+            </td>
+            <td>
+                <a href="{{ url_for('admin_delete_rental', rental_id=rental.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Удалить аренду #{{ rental.id }}?')">Удалить</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="10">Нет аренд.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

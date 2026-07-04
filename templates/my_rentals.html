@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Мои аренды</h2>
+{% if rentals %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Автомобиль</th>
+                <th>Дата начала</th>
+                <th>Дата окончания</th>
+                <th>Стоимость</th>
+                <th>Статус</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rental in rentals %}
+            <tr>
+                <td>{{ rental.car.brand }} {{ rental.car.model }}</td>
+                <td>{{ rental.start_date.strftime('%d.%m.%Y') }}</td>
+                <td>{{ rental.end_date.strftime('%d.%m.%Y') }}</td>
+                <td>{{ rental.total_cost }} руб.</td>
+                <td>
+                    {% if rental.status == 'booked' %}
+                        <span class="badge bg-warning">Забронировано</span>
+                    {% elif rental.status == 'active' %}
+                        <span class="badge bg-primary">Активно</span>
+                    {% elif rental.status == 'completed' %}
+                        <span class="badge bg-success">Завершено</span>
+                    {% elif rental.status == 'cancelled' %}
+                        <span class="badge bg-secondary">Отменено</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if rental.status == 'booked' %}
+                        <a href="{{ url_for('cancel_rental', rental_id=rental.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Отменить бронирование?')">Отменить</a>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>У вас пока нет аренд.</p>
+{% endif %}
+<a href="{{ url_for('index') }}" class="btn btn-secondary">На главную</a>
+{% endblock %}

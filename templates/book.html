@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Бронирование автомобиля {{ car.brand }} {{ car.model }}</h2>
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Цена за день:</strong> {{ car.price_per_day }} руб.</p>
+        <p><strong>Описание:</strong> {{ car.description or 'Нет описания' }}</p>
+    </div>
+</div>
+<form method="POST" action="{{ url_for('book_car', car_id=car.id) }}">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="start_date" class="form-label">Дата начала</label>
+            <input type="date" class="form-control" id="start_date" name="start_date" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="end_date" class="form-label">Дата окончания</label>
+            <input type="date" class="form-control" id="end_date" name="end_date" required>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">Забронировать</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}
