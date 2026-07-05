@@ -22,8 +22,6 @@ def load_user(user_id):
     from models import User
     return User.query.get(int(user_id))
 
-# ---------- МАРШРУТЫ ----------
-
 @app.route('/')
 def index():
     from models import Car
@@ -238,8 +236,6 @@ def cancel_rental(rental_id):
     db.session.commit()
     flash('Аренда отменена')
     return redirect(url_for('my_rentals'))
-
-# ---------- МАРШРУТЫ ДЛЯ АДМИНИСТРАТОРА ----------
 
 @app.route('/admin/rentals')
 @login_required
